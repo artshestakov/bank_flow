@@ -2,7 +2,6 @@ import asyncio
 import logging
 import sys
 from os import getenv
-
 import aiogram.utils.formatting
 from aiogram import Bot, Dispatcher, html
 from aiogram.client.default import DefaultBotProperties
@@ -13,7 +12,6 @@ from aiogram.types import Message
 from cmd_start import Start
 from cmd_help import Help
 
-TOKEN = "8116206559:AAEpY3NXGE1KzJTr9VXN0DhY-f66Yz1JEWk"
 dp = Dispatcher()
 
 # Класс описывающий команду
@@ -48,19 +46,17 @@ async def incoming_message(message: Message) -> None:
     if cmd is None:
         return None
 
-    try:
-        match cmd.Name:
-            case "/start":
-                await Start(message)
-            case "/help":
-                await Help(message)
+    match cmd.Name:
+        case "/start":
+            await Start(message)
+        case "/help":
+            await Help(message)
 
-    except TypeError:
-        await message.answer("Nice try!")
+    await message.answer("Такая команда не поддерживается.")
 
 
 async def main() -> None:
-    bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+    bot = Bot(token="8116206559:AAEpY3NXGE1KzJTr9VXN0DhY-f66Yz1JEWk", default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     await dp.start_polling(bot)
 
 
