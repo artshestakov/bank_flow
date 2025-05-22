@@ -25,9 +25,14 @@ async def Logout(msg: Message, auth_token: AuthToken):
 
     try:
         data = {"token": auth_token.Value}
-        r = requests.get(url="http://127.0.0.1:8000/logout", data=data)
+        r = requests.post(url="http://127.0.0.1:8000/logout", json=data)
+
+        if r.status_code == 200:
+            await msg.answer("Токен отдан")
+        else:
+            await msg.answer(r.text)
 
         auth_token.Value = str()
-        await msg.answer("Токен отдан")
+
     except Exception as e:
         await msg.answer(str(e), parse_mode=ParseMode.MARKDOWN)

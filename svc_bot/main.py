@@ -57,8 +57,8 @@ async def incoming_message(message: Message) -> None:
             await Login(message, auth_token)
         case "/logout":
             await Logout(message, auth_token)
-
-    await message.answer("Такая команда не поддерживается.")
+        case _:
+            await message.answer("Такая команда не поддерживается.")
 
 
 async def main() -> None:

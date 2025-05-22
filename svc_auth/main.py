@@ -9,31 +9,31 @@ app = Flask(__name__)
 @app.route("/login", methods=['GET'])
 def login():
 
-    # Генерируем токен и вставльяем его в список всех токенов
+    # Генерируем токен и вставляем его в список всех токенов
     token = str(uuid.uuid4())
     token = token.replace('-', '')
     token_list.append(token)
 
     return json.dumps({"token": token})
 
-@app.route("/logout", methods=["GET"])
+@app.route("/logout", methods=["POST"])
 def logout():
     # Парсим запрос
     params = json.loads(request.data)
 
     # Проверяем поля
     if "token" not in params:
-        return Response(status=400, response="Field 'token' does not exist")
+        return Response(status=400, response="Поле с токеном отсутствует!")
 
     token = params["token"]
 
     if len(token) == 0:
-        return Response(status=400, response="Token is empty")
+        return Response(status=400, response="Токен пустой!")
 
     if token in token_list:
         token_list.remove(token)
     else:
-        return Response(status=404, response="Token not found")
+        return Response(status=404, response="Токен не найден!")
 
     return Response(status=200)
 
