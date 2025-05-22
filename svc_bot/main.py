@@ -11,8 +11,10 @@ from aiogram.types import Message
 
 from cmd_start import Start
 from cmd_help import Help
+from cmd_auth import Auth, AuthToken
 
 dp = Dispatcher()
+auth_token = AuthToken()
 
 # Класс описывающий команду
 class CMD:
@@ -51,6 +53,8 @@ async def incoming_message(message: Message) -> None:
             await Start(message)
         case "/help":
             await Help(message)
+        case "/auth":
+            await Auth(message, auth_token)
 
     await message.answer("Такая команда не поддерживается.")
 
