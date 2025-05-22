@@ -7,10 +7,9 @@ from aiogram import Bot, Dispatcher, html
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
-from aiogram.types import Message
+from aiogram.types import Message, BotCommand
 
 from cmd_start import Start
-from cmd_help import Help
 from cmd_auth import Login, Logout, AuthToken
 
 dp = Dispatcher()
@@ -51,8 +50,6 @@ async def incoming_message(message: Message) -> None:
     match cmd.Name:
         case "/start":
             await Start(message)
-        case "/help":
-            await Help(message)
         case "/login":
             await Login(message, auth_token)
         case "/logout":
@@ -62,7 +59,15 @@ async def incoming_message(message: Message) -> None:
 
 
 async def main() -> None:
+
+    bot_commands = [
+        BotCommand(command="/login", description="Авторизация"),
+        BotCommand(command="/logout", description="Выход")
+    ]
+
     bot = Bot(token="8116206559:AAEpY3NXGE1KzJTr9VXN0DhY-f66Yz1JEWk", default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+    await bot.set_my_commands(bot_commands)
+
     await dp.start_polling(bot)
 
 
