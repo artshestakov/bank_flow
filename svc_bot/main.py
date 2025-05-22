@@ -11,7 +11,7 @@ from aiogram.types import Message
 
 from cmd_start import Start
 from cmd_help import Help
-from cmd_auth import Auth, AuthToken
+from cmd_auth import Login, Logout, AuthToken
 
 dp = Dispatcher()
 auth_token = AuthToken()
@@ -53,8 +53,10 @@ async def incoming_message(message: Message) -> None:
             await Start(message)
         case "/help":
             await Help(message)
-        case "/auth":
-            await Auth(message, auth_token)
+        case "/login":
+            await Login(message, auth_token)
+        case "/logout":
+            await Logout(message, auth_token)
 
     await message.answer("Такая команда не поддерживается.")
 
