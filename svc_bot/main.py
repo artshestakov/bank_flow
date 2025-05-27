@@ -10,6 +10,7 @@ from aiogram.filters import CommandStart
 from aiogram.types import Message, BotCommand
 
 from cmd_start import Start
+import cmd_register
 from cmd_auth import Login, Logout, AuthToken
 
 dp = Dispatcher()
@@ -50,6 +51,8 @@ async def incoming_message(message: Message) -> None:
     match cmd.Name:
         case "/start":
             await Start(message)
+        case "/register":
+            await cmd_register.Register(message, cmd.args)
         case "/login":
             await Login(message, auth_token)
         case "/logout":
@@ -61,6 +64,7 @@ async def incoming_message(message: Message) -> None:
 async def main() -> None:
 
     bot_commands = [
+        BotCommand(command="/register", description="Регистрация (user_name, first_name, last_name)"),
         BotCommand(command="/login", description="Авторизация"),
         BotCommand(command="/logout", description="Выход")
     ]
