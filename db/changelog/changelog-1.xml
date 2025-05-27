@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="1" author="Shestakov">
+        <createTable tableName="users" remarks="Пользователи">
+
+            <column name="ID" type="UUID" defaultValueComputed="gen_random_uuid()" remarks="Идентификатор пользователя">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="user_name" type="VARCHAR" remarks="Никнейм"/>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="Shestakov">
+        <sql>ALTER TABLE users DROP COLUMN id;</sql>
+    </changeSet>
+
+    <changeSet id="3" author="Shestakov">
+        <sql>ALTER TABLE users ALTER COLUMN user_name SET NOT NULL;</sql>
+    </changeSet>
+
+    <changeSet id="4" author="Shestakov">
+        <addColumn tableName="users">
+            <column name="first_name" type="VARCHAR" remarks="Фамилия">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="5" author="Shestakov">
+        <addColumn tableName="users">
+            <column name="last_name" type="VARCHAR" remarks="Имя">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>
