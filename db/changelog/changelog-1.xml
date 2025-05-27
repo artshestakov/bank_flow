@@ -42,4 +42,8 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="6" author="Shestakov">
+        <sql>ALTER TABLE public.users ADD PRIMARY KEY (user_name);</sql>
+    </changeSet>
+
 </databaseChangeLog>
