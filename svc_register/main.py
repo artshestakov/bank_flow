@@ -1,7 +1,10 @@
 import json
+import sys
 import psycopg2
-import utils.db as db
 from flask import Flask, request, jsonify, Response
+
+sys.path.append("..")
+from utils import db, constants
 
 app = Flask(__name__)
 
@@ -45,4 +48,4 @@ def logout():
     return Response(status=200, response="Регистрация прошла успешно")
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000)
+    app.run(host='0.0.0.0', port=constants.TCP_PORT_REGISTER)

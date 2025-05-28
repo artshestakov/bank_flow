@@ -1,14 +1,14 @@
 import psycopg2
-import utils.constants as c
+from . import constants
 
 def make_connect():
 
     try:
-        return psycopg2.connect(host=c.DB_HOST,
-                                port=c.DB_PORT,
-                                dbname=c.DB_NAME,
-                                user=c.DB_USER,
-                                password=c.DB_PASS)
+        return psycopg2.connect(host=constants.DB_HOST,
+                                port=constants.DB_PORT,
+                                dbname=constants.DB_NAME,
+                                user=constants.DB_USER,
+                                password=constants.DB_PASS)
 
     except Exception as e:
         print(str(e))
