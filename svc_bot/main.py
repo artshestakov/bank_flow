@@ -64,7 +64,7 @@ async def incoming_message(message: Message) -> None:
 async def main() -> None:
 
     bot_commands = [
-        BotCommand(command="/register", description="Регистрация (user_name, first_name, last_name)"),
+        BotCommand(command="/register", description="Регистрация (login, first_name, last_name)"),
         BotCommand(command="/login", description="Авторизация"),
         BotCommand(command="/logout", description="Выход")
     ]
