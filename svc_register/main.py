@@ -11,8 +11,8 @@ def logout():
 
     # Проверяем параметры запроса
 
-    if "user_name" not in params:
-        return Response(status=400, response="Поле 'user_name' отсутствует!")
+    if "login" not in params:
+        return Response(status=400, response="Поле 'login' отсутствует!")
 
     if "first_name" not in params:
         return Response(status=400, response="Поле 'first_name' отсутствует!")
@@ -21,12 +21,12 @@ def logout():
         return Response(status=400, response="Поле 'last_name' отсутствует!")
 
     # Вытаскиваем параметры
-    user_name = params["user_name"]
+    login = params["login"]
     first_name = params["first_name"]
     last_name = params["last_name"]
 
     # Убеждаемся, что они заполнены
-    if len(user_name) == 0 or len(first_name) == 0 or len(last_name) == 0:
+    if len(login) == 0 or len(first_name) == 0 or len(last_name) == 0:
         return Response(status=400, response="Одно из полей пустое")
 
     conn = db.make_connect()
@@ -37,7 +37,7 @@ def logout():
     cur = conn.cursor()
 
     try:
-        cur.execute(f"INSERT INTO users(user_name, first_name, last_name) VALUES ('{user_name}', '{first_name}', '{last_name}')")
+        cur.execute(f"INSERT INTO customer(login, first_name, last_name) VALUES ('{login}', '{first_name}', '{last_name}')")
         conn.commit()
     except Exception as e:
         return Response(status=400, response=str(e))

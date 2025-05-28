@@ -46,4 +46,16 @@
         <sql>ALTER TABLE public.users ADD PRIMARY KEY (user_name);</sql>
     </changeSet>
 
+    <changeSet id="7" author="Shestakov">
+        <sql>ALTER TABLE users RENAME TO customer;</sql>
+    </changeSet>
+
+    <changeSet id="8" author="Shestakov">
+        <sql>ALTER TABLE customer RENAME COLUMN user_name TO login;</sql>
+    </changeSet>
+
+    <changeSet id="9" author="Shestakov">
+        <sql>ALTER INDEX users_pkey RENAME TO customer_pkey;</sql>
+    </changeSet>
+
 </databaseChangeLog>
