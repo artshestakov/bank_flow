@@ -1,7 +1,10 @@
 import json
+import sys
 import uuid
-
 from flask import Flask, request, jsonify, Response
+
+sys.path.append("..")
+from utils import constants
 
 token_list = list()
 app = Flask(__name__)
@@ -17,7 +20,7 @@ def login():
     return json.dumps({"token": token})
 
 @app.route("/logout", methods=["POST"])
-def logout():
+def logout(is_need_remove=True):
     # Парсим запрос
     params = json.loads(request.data)
 
@@ -31,12 +34,19 @@ def logout():
         return Response(status=400, response="Токен пустой!")
 
     if token in token_list:
-        token_list.remove(token)
+        if is_need_remove:
+            token_list.remove(token)
     else:
         return Response(status=404, response="Токен не найден!")
 
-    return Response(status=200)
+    return Response(status=200, response="Выход выполнен!")
+
+
+@app.route("/has", methods=["POST"])
+def has():
+    # Используем logout, чтобы не копипастить, но без удаления токена из памяти
+    return logout(False)
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000)
+    app.run(host='0.0.0.0', port=constants.TCP_PORT_AUTH)
