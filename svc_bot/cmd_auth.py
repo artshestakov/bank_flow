@@ -12,11 +12,15 @@ class AuthToken:
 
     Value: str
 
-async def Login(msg: Message, auth_token: AuthToken):
+async def Login(msg: Message, auth_token: AuthToken, params: list):
+
+    data = {
+        "login": params[0]
+    }
 
     # Получаем токен
     try:
-        r = requests.get(url=f"http://127.0.0.1:{constants.TCP_PORT_AUTH}/login")
+        r = requests.post(url=f"http://127.0.0.1:{constants.TCP_PORT_AUTH}/login", json=data)
         response = r.json()
         auth_token.Value = response["token"]
 

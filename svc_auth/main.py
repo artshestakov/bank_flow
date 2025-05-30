@@ -6,18 +6,25 @@ from flask import Flask, request, jsonify, Response
 sys.path.append("..")
 from utils import constants
 
-token_list = list()
+token_list = dict()
 app = Flask(__name__)
 
-@app.route("/login", methods=['GET'])
+@app.route("/login", methods=['POST'])
 def login():
+    params = json.loads(request.data)
+
+    if "login" not in params:
+        return Response(status=400, response="Поле 'login' отсутствует!")
+
+    login = params["login"]
 
     # Генерируем токен и вставляем его в список всех токенов
     token = str(uuid.uuid4())
     token = token.replace('-', '')
-    token_list.append(token)
+    token_list[token] = login
 
-    return json.dumps({"token": token})
+    #return json.dumps({"token": token})
+    return Response(status=200, response=json.dumps({"token": token}))
 
 @app.route("/logout", methods=["POST"])
 def logout(is_need_remove=True):

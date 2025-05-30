@@ -12,6 +12,7 @@ from aiogram.types import Message, BotCommand
 from cmd_start import Start
 import cmd_register
 from cmd_auth import Login, Logout, AuthToken
+from cmd_card import CardCreate
 
 dp = Dispatcher()
 auth_token = AuthToken()
@@ -54,9 +55,11 @@ async def incoming_message(message: Message) -> None:
         case "/register":
             await cmd_register.Register(message, cmd.args)
         case "/login":
-            await Login(message, auth_token)
+            await Login(message, auth_token, cmd.args)
         case "/logout":
             await Logout(message, auth_token)
+        case "/card_create":
+            await CardCreate(message, auth_token.Value)
         case _:
             await message.answer("Такая команда не поддерживается.")
 
@@ -65,8 +68,9 @@ async def main() -> None:
 
     bot_commands = [
         BotCommand(command="/register", description="Регистрация (login, first_name, last_name)"),
-        BotCommand(command="/login", description="Авторизация"),
-        BotCommand(command="/logout", description="Выход")
+        BotCommand(command="/login", description="Авторизация (login)"),
+        BotCommand(command="/logout", description="Выход"),
+        BotCommand(command="/card_create", description="Создание карты")
     ]
 
     bot = Bot(token="8116206559:AAEpY3NXGE1KzJTr9VXN0DhY-f66Yz1JEWk", default=DefaultBotProperties(parse_mode=ParseMode.HTML))
