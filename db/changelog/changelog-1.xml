@@ -58,4 +58,26 @@
         <sql>ALTER INDEX users_pkey RENAME TO customer_pkey;</sql>
     </changeSet>
 
+    <changeSet id="10" author="Shestakov">
+        <createTable tableName="card" remarks="Карты">
+
+            <column name="customer_id" type="VARCHAR" remarks="Логин клиента">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="number" type="BIGINT" remarks="Номер карты">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="balance" type="MONEY" remarks="Баланс">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="11" author="Shestakov">
+        <sql>CREATE UNIQUE INDEX card_customer_number_idx ON card USING btree (customer_id, number);</sql>
+    </changeSet>
+
 </databaseChangeLog>
