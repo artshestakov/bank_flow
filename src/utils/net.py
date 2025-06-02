@@ -19,6 +19,9 @@ class NetQuery:
     def execute_get(self, port: int, method: str) -> int:
         return self.execute(MethodType.GET, port, method)
 
+    def execute_post(self, port: int, method: str) -> int:
+        return self.execute(MethodType.POST, port, method)
+
     def execute(self, method_type: MethodType, port: int, method_name: str) -> int:
 
         url = f"http://127.0.0.1:{port}/{method_name}"
@@ -31,7 +34,7 @@ class NetQuery:
                 case MethodType.GET:
                     response = requests.get(url, data=json_body)
                 case MethodType.POST:
-                    response = requests.post(url)
+                    response = requests.post(url, data=json_body)
 
             self.m_Response = response.text
             return response.status_code

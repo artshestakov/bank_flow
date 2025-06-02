@@ -29,7 +29,7 @@ def create():
     last_name = params["last_name"]
 
     # Убеждаемся, что они заполнены
-    if len(id) == 0 or len(first_name) == 0 or len(last_name) == 0:
+    if len(first_name) == 0 or len(last_name) == 0:
         return Response(status=400, response="Одно из полей пустое")
 
     conn = db.make_connect()
