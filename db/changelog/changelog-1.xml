@@ -80,4 +80,12 @@
         <sql>CREATE UNIQUE INDEX card_customer_number_idx ON card USING btree (customer_id, number);</sql>
     </changeSet>
 
+    <changeSet id="12" author="Shestakov">
+        <sql>ALTER TABLE customer RENAME COLUMN login TO id;</sql>
+    </changeSet>
+
+    <changeSet id="13" author="Shestakov">
+        <sql>ALTER TABLE customer ALTER COLUMN id TYPE BIGINT USING (id::BIGINT);</sql>
+    </changeSet>
+
 </databaseChangeLog>
