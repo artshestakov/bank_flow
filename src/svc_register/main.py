@@ -57,10 +57,6 @@ def get():
 
     id = params["id"]
 
-    # Убеждаемся, что они заполнены
-    if len(id) == 0:
-        return Response(status=400, response="Одно из полей пустое")
-
     conn = db.make_connect()
 
     if conn is None:
@@ -80,8 +76,12 @@ def get():
     except Exception as e:
         return Response(status=400, response=str(e))
 
-    return Response(status=200, response="Регистрация прошла успешно")
+    return Response(status=200)
+
+
+def main():
+    app.run(host='0.0.0.0', port=constants.TCP_PORT_REGISTER)
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=constants.TCP_PORT_REGISTER)
+    main()

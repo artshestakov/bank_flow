@@ -1,27 +1,40 @@
 import asyncio
 import logging
 import sys
-from os import getenv
-import aiogram.utils.formatting
-from aiogram import Bot, Dispatcher, html
-from aiogram.client.default import DefaultBotProperties
-from aiogram.enums import ParseMode
-from aiogram.filters import CommandStart
-from aiogram.types import Message, BotCommand
 
-from cmd_start import Start
-import cmd_register
-from cmd_auth import Login, Logout, AuthToken
-from cmd_card import CardCreate
+from telegram import Update
+from telegram.ext import Application, CommandHandler, ContextTypes
 
-dp = Dispatcher()
-auth_token = AuthToken()
+#from os import getenv
+#import aiogram.utils.formatting
+#from aiogram import Bot, Dispatcher, html
+#from aiogram import Dispatcher
+#from aiogram.client.default import DefaultBotProperties
+#from aiogram.enums import ParseMode
+#from aiogram.filters import CommandStart
+#from aiogram.types import Message, BotCommand
 
+
+
+#import cmd_start
+from src.svc_bot import cmd_start
+#from src.svc_bot import cmd_register
+#from src.svc_bot.cmd_auth import Login, Logout, AuthToken
+#from src.svc_bot.cmd_card import CardCreate
+
+
+
+
+#auth_token = AuthToken()
+
+"""
 # Класс описывающий команду
 class CMD:
     Name: str
     args: list
+"""
 
+"""
 def make_command(text: str):
     lst = text.split()
     cmd_name = lst[0]
@@ -38,7 +51,9 @@ def make_command(text: str):
     cmd.args = lst
 
     return cmd
+"""
 
+"""
 @dp.message()
 async def incoming_message(message: Message) -> None:
 
@@ -51,7 +66,7 @@ async def incoming_message(message: Message) -> None:
 
     match cmd.Name:
         case "/start":
-            await Start(message)
+            await cmd_start.Start(message)
         case "/register":
             await cmd_register.Register(message, cmd.args)
         case "/login":
@@ -62,8 +77,9 @@ async def incoming_message(message: Message) -> None:
             await CardCreate(message, auth_token.Value)
         case _:
             await message.answer("Такая команда не поддерживается.")
+"""
 
-
+"""
 async def main() -> None:
 
     bot_commands = [
@@ -77,8 +93,24 @@ async def main() -> None:
     await bot.set_my_commands(bot_commands)
 
     await dp.start_polling(bot)
+"""
 
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await cmd_start.Start(update)
+    #await update.message.reply_text("123")
+
+def main() -> None:
+    #logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+    #asyncio.run(main())
+
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+
+    bot = Application.builder().token("8116206559:AAEpY3NXGE1KzJTr9VXN0DhY-f66Yz1JEWk").build()
+    bot.add_handler(CommandHandler("start", start))
+
+    #bot.run_polling(allowed_updates=Update.ALL_TYPES)
+    loop.run_until_complete(bot.run_polling(allowed_updates=Update.ALL_TYPES))
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
-    asyncio.run(main())
+    main()
