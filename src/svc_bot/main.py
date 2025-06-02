@@ -21,6 +21,14 @@ async def register_no(update: Update, context: CallbackContext) -> None:
                                       chat_id=update.callback_query.from_user.id,
                                       message_id=update.callback_query.message.message_id)
 # ----------------------------------------------------------------------------------------------------------------------
+async def card_list(update: Update, context: CallbackContext) -> None:
+    await cmd_card.CardList(update, context, update.callback_query.message.message_id)
+# ----------------------------------------------------------------------------------------------------------------------
+async def card_create(update: Update, context: CallbackContext) -> None:
+    res = await cmd_card.CardCreate(update, context)
+    if res is True:
+        await card_list(update, context)
+# ----------------------------------------------------------------------------------------------------------------------
 def main() -> None:
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
@@ -29,9 +37,12 @@ def main() -> None:
 
     bot.add_handler(CommandHandler("start", start))
 
-    bot.add_handler(CallbackQueryHandler(pattern='main_menu', callback=main_menu))
-    bot.add_handler(CallbackQueryHandler(pattern='register_yes', callback=register_yes))
-    bot.add_handler(CallbackQueryHandler(pattern='register_no', callback=register_no))
+    bot.add_handler(CallbackQueryHandler(pattern="main_menu", callback=main_menu))
+    bot.add_handler(CallbackQueryHandler(pattern="register_yes", callback=register_yes))
+    bot.add_handler(CallbackQueryHandler(pattern="register_no", callback=register_no))
+    bot.add_handler(CallbackQueryHandler(pattern="card_list", callback=card_list))
+    bot.add_handler(CallbackQueryHandler(pattern="card_list_update", callback=card_list))
+    bot.add_handler(CallbackQueryHandler(pattern="card_create", callback=card_create))
 
     loop.run_until_complete(bot.run_polling(allowed_updates=Update.ALL_TYPES))
 # ----------------------------------------------------------------------------------------------------------------------

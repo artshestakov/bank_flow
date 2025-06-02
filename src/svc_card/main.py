@@ -2,11 +2,18 @@ import json
 import sys
 import random
 import psycopg2
+from decimal import Decimal
 from flask import Flask, request, Response
 # ----------------------------------------------------------------------------------------------------------------------
 from src.utils import constants, db, net
 # ----------------------------------------------------------------------------------------------------------------------
 app = Flask(__name__)
+# ----------------------------------------------------------------------------------------------------------------------
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return float(obj)  # Или str(obj) для точного представления
+        return super().default(obj)
 # ----------------------------------------------------------------------------------------------------------------------
 @app.route("/create", methods=["GET"])
 def create():
@@ -16,9 +23,10 @@ def create():
         return Response(status=415, response="Не удалось разобрать тело запроса.")
 
     customer_id = data.get("customer_id")
+    if customer_id is None:
+        return Response(status=400, response="Поле 'customer_id' пустое!")
 
     conn = db.make_connect()
-
     if conn is None:
         return Response(status=400, response="Не удалось подключиться к БД.")
 
@@ -58,6 +66,34 @@ def create():
     }
 
     return Response(status=200, response=json.dumps(j))
+# ----------------------------------------------------------------------------------------------------------------------
+@app.route("/card_list", methods=["GET"])
+def card_list():
+
+    data = net.ParseBody(request)
+    if data is None:
+        return Response(status=415, response="Не удалось разобрать тело запроса.")
+
+    customer_id = data.get("customer_id")
+    if customer_id is None:
+        return Response(status=400, response="Поле 'customer_id' пустое!")
+
+    conn = db.make_connect()
+    if conn is None:
+        return Response(status=400, response="Не удалось подключиться к БД.")
+
+    cur = conn.cursor()
+
+    try:
+        cur.execute(f"SELECT number, balance, TO_CHAR(creation_date, 'DD.MM.YYYY HH24:MI:SS') FROM card WHERE customer_id = {customer_id} ORDER BY creation_date")
+        rows = cur.fetchall()
+        conn.commit()
+
+        s = json.dumps(rows, cls=DecimalEncoder)
+        return Response(status=200, response=s)
+
+    except Exception as e:
+        return Response(status=400, response=str(e))
 # ----------------------------------------------------------------------------------------------------------------------
 def main():
     app.run(host='0.0.0.0', port=constants.TCP_PORT_CARD)

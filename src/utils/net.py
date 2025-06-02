@@ -40,9 +40,9 @@ class NetQuery:
 
             match method_type:
                 case MethodType.GET:
-                    response = requests.get(url, data=json_body)
+                    response = requests.get(url, data=json_body, headers={"Content-Type":"application/json"})
                 case MethodType.POST:
-                    response = requests.post(url, data=json_body)
+                    response = requests.post(url, data=json_body, headers={"Content-Type":"application/json"})
 
             self.m_Response = response.text
             return response.status_code

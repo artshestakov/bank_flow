@@ -22,7 +22,8 @@ async def Start(user: User, context: CallbackContext, parent_message_id=None) ->
         msg_title = "🔹 Главное меню 🔹"
         keyboard = [
             [
-                InlineKeyboardButton("👤 Мой профиль", callback_data="register_profile")
+                InlineKeyboardButton("👤 Мой профиль", callback_data="register_profile"),
+                InlineKeyboardButton("💳 Мои карты", callback_data="card_list")
             ]
         ]
 

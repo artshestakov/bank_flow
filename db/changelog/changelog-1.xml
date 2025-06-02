@@ -104,4 +104,12 @@
         <sql>ALTER TABLE card ADD CONSTRAINT card_customer_id_fk FOREIGN KEY (customer_id) REFERENCES customer(id) ON DELETE RESTRICT ON UPDATE NO ACTION NOT DEFERRABLE;</sql>
     </changeSet>
 
+    <changeSet id="18" author="Shestakov">
+        <addColumn tableName="card">
+            <column name="creation_date" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP" remarks="Дата и время создания">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
