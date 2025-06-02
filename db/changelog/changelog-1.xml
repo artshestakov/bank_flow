@@ -88,4 +88,20 @@
         <sql>ALTER TABLE customer ALTER COLUMN id TYPE BIGINT USING (id::BIGINT);</sql>
     </changeSet>
 
+    <changeSet id="14" author="Shestakov">
+        <sql>CREATE UNIQUE INDEX card_number_idx ON card USING btree (number);</sql>
+    </changeSet>
+
+    <changeSet id="15" author="Shestakov">
+        <sql>ALTER TABLE card ALTER COLUMN balance SET DEFAULT 0;</sql>
+    </changeSet>
+
+    <changeSet id="16" author="Shestakov">
+        <sql>ALTER TABLE card ALTER COLUMN customer_id TYPE BIGINT USING (customer_id::BIGINT);</sql>
+    </changeSet>
+
+    <changeSet id="17" author="Shestakov">
+        <sql>ALTER TABLE card ADD CONSTRAINT card_customer_id_fk FOREIGN KEY (customer_id) REFERENCES customer(id) ON DELETE RESTRICT ON UPDATE NO ACTION NOT DEFERRABLE;</sql>
+    </changeSet>
+
 </databaseChangeLog>

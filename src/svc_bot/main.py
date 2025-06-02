@@ -5,9 +5,7 @@ from telegram.ext import Application, CommandHandler, ContextTypes, CallbackQuer
 
 from src.svc_bot import cmd_start
 from src.svc_bot import cmd_register
-#from src.svc_bot import cmd_register
-#from src.svc_bot.cmd_auth import Login, Logout, AuthToken
-#from src.svc_bot.cmd_card import CardCreate
+from src.svc_bot import cmd_card
 # ----------------------------------------------------------------------------------------------------------------------
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await cmd_start.Start(update.message.from_user, context)

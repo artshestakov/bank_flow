@@ -3,11 +3,19 @@ import json
 import requests
 from enum import Enum
 from . import constants
+# ----------------------------------------------------------------------------------------------------------------------
+def ParseBody(request: requests.Request) -> dict:
+    try:
+        return request.get_json()
+    except Exception as e:
+        print(f"Failed to convert request body to json: {str(e)}")
 
+    return None
+# ----------------------------------------------------------------------------------------------------------------------
 class MethodType(Enum):
     GET = 1,
     POST = 2
-
+# ----------------------------------------------------------------------------------------------------------------------
 class NetQuery:
     def __init__(self):
         self.m_Params = {}
@@ -43,3 +51,4 @@ class NetQuery:
             self.m_Response = f"Не удалось выполнить запрос: {str(e)}"
 
         return None
+# ----------------------------------------------------------------------------------------------------------------------
