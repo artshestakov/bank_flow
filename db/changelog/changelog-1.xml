@@ -112,4 +112,26 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="19" author="Shestakov">
+        <createTable tableName="transaction" remarks="Карты">
+
+            <column name="date_time" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP" remarks="Дата и время транзакции">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="card_from" type="BIGINT" remarks="Карта-отправитель">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="card_to" type="BIGINT" remarks="Карта-получатель">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="sum" type="MONEY" remarks="Сумма">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
 </databaseChangeLog>
