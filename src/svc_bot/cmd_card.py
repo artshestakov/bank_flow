@@ -45,8 +45,10 @@ async def CardList(upd: Update, context: CallbackContext):
         # Формируем клавиатуру с картами
         for number in json_array:
 
+            short_number = number % (10 ** 4)
+
             tmp_list = []
-            btn_card = InlineKeyboardButton(text=f"💳 {number}", callback_data=f"card_click_{number}")
+            btn_card = InlineKeyboardButton(text=f"💳 *{short_number}", callback_data=f"card_click_{number}")
             tmp_list.append(btn_card)
 
             keyboard.append(tmp_list)
