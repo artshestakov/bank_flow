@@ -6,7 +6,7 @@ from src.utils import constants, net
 async def Start(user: User, context: CallbackContext, parent_message_id=None) -> None:
     # Идем в сервис регистрации и спрашиваем, есть ли такой пользователь
     q = net.NetQuery()
-    q.Bind("id", user.id)
+    q.Bind("customer_id", user.id)
     status_code = q.execute_get(constants.TCP_PORT_REGISTER, "get")
 
     # Если что-то пошло не так

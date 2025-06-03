@@ -9,7 +9,7 @@ async def Register(context: CallbackContext, upd: Update):
 
     # Идем в сервис регистрации и регистрируемся
     q = net.NetQuery()
-    q.Bind("id", user.id)
+    q.Bind("customer_id", user.id)
     q.Bind("first_name", user.first_name)
     q.Bind("last_name", user.last_name)
     status_code = q.execute_post(constants.TCP_PORT_REGISTER, "create")
