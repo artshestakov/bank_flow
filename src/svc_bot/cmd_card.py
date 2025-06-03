@@ -40,7 +40,7 @@ async def CardList(upd: Update, context: CallbackContext):
 
     # Если карт нет - так и говорим
     if len(json_array) == 0:
-        text += "В настоящий момент у вас нет ни одной карты. Нажмите кнопку *Создать* для добавления вашей первой карты."
+        text += "В настоящий момент у вас нет ни одной карты. Нажмите кнопку *Новая карта* для добавления вашей первой карты."
     else:
         # Формируем клавиатуру с картами
         for number in json_array:
@@ -92,7 +92,7 @@ async def CardClick(upd: Update, context: CallbackContext):
 
     keyboard = [
         [
-            InlineKeyboardButton("❌ Удалить", callback_data="card_create")
+            InlineKeyboardButton("❌ Удалить", callback_data=f"card_delete_{card_number}")
         ],
         [
             InlineKeyboardButton("↩ К списку карт", callback_data="card_list")
@@ -104,4 +104,22 @@ async def CardClick(upd: Update, context: CallbackContext):
                                       parse_mode=telegram.constants.ParseMode.MARKDOWN,
                                       text=text,
                                       reply_markup=InlineKeyboardMarkup(keyboard))
+# ----------------------------------------------------------------------------------------------------------------------
+async def CardDelete(upd: Update, context: CallbackContext) -> bool:
+
+    # Вытаскиваем номер карты
+    card_number = upd.callback_query.data
+    card_number = helper.extract_digits_from_str(card_number)
+
+    # И идём в сервис карт с удалением
+    q = net.NetQuery()
+    q.Bind("number", card_number)
+    status_code = q.execute_delete(constants.TCP_PORT_CARD, "delete")
+
+    if status_code != 200:
+        await context.bot.send_message(chat_id=upd.callback_query.from_user.id,
+                                       text=f"Что-то пошло не так: {q.m_Response}")
+        return False
+
+    return True
 # ----------------------------------------------------------------------------------------------------------------------

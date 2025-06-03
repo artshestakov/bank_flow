@@ -131,6 +131,31 @@ def card():
     except Exception as e:
         return Response(status=400, response=str(e))
 # ----------------------------------------------------------------------------------------------------------------------
+@app.route("/delete", methods=["DELETE"])
+def delete():
+
+    data = net.ParseBody(request)
+    if data is None:
+        return Response(status=415, response="Не удалось разобрать тело запроса.")
+
+    number = data.get("number")
+    if number is None:
+        return Response(status=400, response="Поле 'number' пустое!")
+
+    conn = db.make_connect()
+    if conn is None:
+        return Response(status=400, response="Не удалось подключиться к БД.")
+
+    cur = conn.cursor()
+
+    try:
+        cur.execute(f"DELETE FROM card WHERE number = {number}")
+        conn.commit()
+    except Exception as e:
+        return Response(status=400, response=str(e))
+
+    return Response(status=200)
+# ----------------------------------------------------------------------------------------------------------------------
 def main():
     app.run(host='0.0.0.0', port=constants.TCP_PORT_CARD)
 # ----------------------------------------------------------------------------------------------------------------------

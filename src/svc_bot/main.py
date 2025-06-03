@@ -32,6 +32,11 @@ async def card_create(update: Update, context: CallbackContext) -> None:
 async def card_click(update: Update, context: CallbackContext) -> None:
     await cmd_card.CardClick(update, context)
 # ----------------------------------------------------------------------------------------------------------------------
+async def card_delete(update: Update, context: CallbackContext) -> None:
+    res = await cmd_card.CardDelete(update, context)
+    if res is True:
+        await card_list(update, context)
+# ----------------------------------------------------------------------------------------------------------------------
 def main() -> None:
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
@@ -46,6 +51,7 @@ def main() -> None:
     bot.add_handler(CallbackQueryHandler(pattern="card_list", callback=card_list))
     bot.add_handler(CallbackQueryHandler(pattern="card_create", callback=card_create))
     bot.add_handler(CallbackQueryHandler(pattern="card_click", callback=card_click))
+    bot.add_handler(CallbackQueryHandler(pattern="card_delete", callback=card_delete))
 
     loop.run_until_complete(bot.run_polling(allowed_updates=Update.ALL_TYPES))
 # ----------------------------------------------------------------------------------------------------------------------
