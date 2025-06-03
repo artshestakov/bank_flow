@@ -51,7 +51,7 @@ async def CardList(upd: Update, context: CallbackContext):
 
             keyboard.append(tmp_list)
 
-    keyboard.append([InlineKeyboardButton("➕ Создать", callback_data="card_create")])
+    keyboard.append([InlineKeyboardButton("➕ Новая карта", callback_data="card_create")])
     keyboard.append([InlineKeyboardButton("↩ Главное меню", callback_data="main_menu")])
 
     await context.bot.editMessageText(message_id=upd.callback_query.message.message_id,
@@ -89,7 +89,6 @@ async def CardClick(upd: Update, context: CallbackContext):
         balance = str("0")
 
     text += f"💸 Баланс: {balance}"
-
 
     keyboard = [
         [
