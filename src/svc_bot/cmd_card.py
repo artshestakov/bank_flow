@@ -35,25 +35,23 @@ async def CardList(upd: Update, context: CallbackContext, parent_message_id: int
 
     json_array = json.loads(q.m_Response)
     text = "*Мои карты:*\n\n"
+    keyboard = []
 
     # Если карт нет - так и говорим
     if len(json_array) == 0:
         text += "В настоящий момент у вас нет ни одной карты. Нажмите кнопку *Создать* для добавления вашей первой карты."
     else:
         # Формируем клавиатуру с картами
-        for json_object in json_array:
-            number = str(json_object[0])
-            balance = str(json_object[1])
-            date_time = str(json_object[2])
+        for number in json_array:
 
-            text += f"💳 `{number}`\n💸 {balance}\n📅 {date_time}\n\n"
+            tmp_list = []
+            btn_card = InlineKeyboardButton(text=f"💳 {number}", callback_data="card_click")
+            tmp_list.append(btn_card)
 
-    keyboard = [
-        [
-            InlineKeyboardButton("🔄 Обновить", callback_data="card_list_update"),
-            InlineKeyboardButton("➕ Создать", callback_data="card_create")
-        ]
-    ]
+            keyboard.append(tmp_list)
+
+    keyboard.append([InlineKeyboardButton("➕ Создать", callback_data="card_create")])
+    keyboard.append([InlineKeyboardButton("↩ Главное меню", callback_data="main_menu")])
 
     await context.bot.editMessageText(message_id=upd.callback_query.message.message_id,
                                       chat_id=user.id,

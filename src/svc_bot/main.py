@@ -41,7 +41,6 @@ def main() -> None:
     bot.add_handler(CallbackQueryHandler(pattern="register_yes", callback=register_yes))
     bot.add_handler(CallbackQueryHandler(pattern="register_no", callback=register_no))
     bot.add_handler(CallbackQueryHandler(pattern="card_list", callback=card_list))
-    bot.add_handler(CallbackQueryHandler(pattern="card_list_update", callback=card_list))
     bot.add_handler(CallbackQueryHandler(pattern="card_create", callback=card_create))
 
     loop.run_until_complete(bot.run_polling(allowed_updates=Update.ALL_TYPES))

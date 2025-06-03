@@ -85,12 +85,17 @@ def card_list():
     cur = conn.cursor()
 
     try:
-        cur.execute(f"SELECT number, balance, TO_CHAR(creation_date, 'DD.MM.YYYY HH24:MI:SS') FROM card WHERE customer_id = {customer_id} ORDER BY creation_date")
+        cur.execute(f"SELECT number FROM card WHERE customer_id = {customer_id} ORDER BY creation_date")
         rows = cur.fetchall()
         conn.commit()
 
-        s = json.dumps(rows, cls=DecimalEncoder)
-        return Response(status=200, response=s)
+        number_list = []
+
+        # Формируем список карт пользователя
+        for row in rows:
+            number_list.append(row[0])
+
+        return Response(status=200, response=json.dumps(number_list))
 
     except Exception as e:
         return Response(status=400, response=str(e))
