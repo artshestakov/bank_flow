@@ -83,9 +83,9 @@ async def CardClick(upd: Update, context: CallbackContext):
     text += f"`{str(card_number)}`\n\n"
 
     text += f"📅 *Дата заведения карты*\n"
-    text += f"{json_object[1]}\n\n"
+    text += f"{json_object['creation_date']}\n\n"
 
-    balance = json_object[0]
+    balance = json_object["balance"]
 
     if int(balance) == 0:
         balance = str("0")

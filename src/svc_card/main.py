@@ -119,13 +119,18 @@ def card():
 
     try:
         cur.execute(f"SELECT balance, TO_CHAR(creation_date, 'DD.MM.YYYY HH24:MI:SS') FROM card WHERE number = {number}")
-        card_object = cur.fetchone()
+        row = cur.fetchone()
         conn.commit()
 
-        if card_object is None:
+        if row is None:
             return Response(status=404, response="Карта не найдена!")
 
-        s = json.dumps(card_object, cls=DecimalEncoder)
+        json_object = {
+            "balance": row[0],
+            "creation_date": row[1]
+        }
+
+        s = json.dumps(json_object, cls=DecimalEncoder)
         return Response(status=200, response=s)
 
     except Exception as e:
