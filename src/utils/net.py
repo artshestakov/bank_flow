@@ -1,8 +1,8 @@
 import json
-
 import requests
 from enum import Enum
-from . import constants
+# ----------------------------------------------------------------------------------------------------------------------
+from src.utils import constants
 # ----------------------------------------------------------------------------------------------------------------------
 def ParseBody(request: requests.Request) -> dict:
     try:
