@@ -1,14 +1,18 @@
 import asyncio
 # ----------------------------------------------------------------------------------------------------------------------
-from telegram import Update
+from telegram import Update, BotCommand
 from telegram.ext import Application, CommandHandler, ContextTypes, CallbackQueryHandler, CallbackContext
 # ----------------------------------------------------------------------------------------------------------------------
 from src.svc_bot import cmd_start
 from src.svc_bot import cmd_register
 from src.svc_bot import cmd_card
+from src.svc_bot import cmd_transaction
 # ----------------------------------------------------------------------------------------------------------------------
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await cmd_start.Start(update.message.from_user, context)
+# ----------------------------------------------------------------------------------------------------------------------
+async def transaction_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await cmd_transaction.Transaction(update.message, context)
 # ----------------------------------------------------------------------------------------------------------------------
 async def main_menu(update: Update, context: CallbackContext) -> None:
     await cmd_start.Start(update.callback_query.from_user, context, update.callback_query.message.message_id)
@@ -41,19 +45,20 @@ def main() -> None:
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
-    bot = Application.builder().token("8116206559:AAEpY3NXGE1KzJTr9VXN0DhY-f66Yz1JEWk").build()
+    app = Application.builder().token("8116206559:AAEpY3NXGE1KzJTr9VXN0DhY-f66Yz1JEWk").build()
 
-    bot.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("start", start_command))
+    app.add_handler(CommandHandler("transaction", transaction_command))
 
-    bot.add_handler(CallbackQueryHandler(pattern="main_menu", callback=main_menu))
-    bot.add_handler(CallbackQueryHandler(pattern="register_yes", callback=register_yes))
-    bot.add_handler(CallbackQueryHandler(pattern="register_no", callback=register_no))
-    bot.add_handler(CallbackQueryHandler(pattern="card_list", callback=card_list))
-    bot.add_handler(CallbackQueryHandler(pattern="card_create", callback=card_create))
-    bot.add_handler(CallbackQueryHandler(pattern="card_click", callback=card_click))
-    bot.add_handler(CallbackQueryHandler(pattern="card_delete", callback=card_delete))
+    app.add_handler(CallbackQueryHandler(pattern="main_menu", callback=main_menu))
+    app.add_handler(CallbackQueryHandler(pattern="register_yes", callback=register_yes))
+    app.add_handler(CallbackQueryHandler(pattern="register_no", callback=register_no))
+    app.add_handler(CallbackQueryHandler(pattern="card_list", callback=card_list))
+    app.add_handler(CallbackQueryHandler(pattern="card_create", callback=card_create))
+    app.add_handler(CallbackQueryHandler(pattern="card_click", callback=card_click))
+    app.add_handler(CallbackQueryHandler(pattern="card_delete", callback=card_delete))
 
-    loop.run_until_complete(bot.run_polling(allowed_updates=Update.ALL_TYPES))
+    loop.run_until_complete(app.run_polling(allowed_updates=Update.ALL_TYPES))
 # ----------------------------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
     main()
