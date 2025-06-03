@@ -1,8 +1,8 @@
 import asyncio
-
+# ----------------------------------------------------------------------------------------------------------------------
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes, CallbackQueryHandler, CallbackContext
-
+# ----------------------------------------------------------------------------------------------------------------------
 from src.svc_bot import cmd_start
 from src.svc_bot import cmd_register
 from src.svc_bot import cmd_card

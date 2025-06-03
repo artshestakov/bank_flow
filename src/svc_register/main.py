@@ -1,6 +1,4 @@
 import json
-import sys
-import psycopg2
 from flask import Flask, request, jsonify, Response
 # ----------------------------------------------------------------------------------------------------------------------
 from src.utils import constants, db, net
