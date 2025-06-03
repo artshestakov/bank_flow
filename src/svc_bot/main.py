@@ -22,12 +22,15 @@ async def register_no(update: Update, context: CallbackContext) -> None:
                                       message_id=update.callback_query.message.message_id)
 # ----------------------------------------------------------------------------------------------------------------------
 async def card_list(update: Update, context: CallbackContext) -> None:
-    await cmd_card.CardList(update, context, update.callback_query.message.message_id)
+    await cmd_card.CardList(update, context)
 # ----------------------------------------------------------------------------------------------------------------------
 async def card_create(update: Update, context: CallbackContext) -> None:
     res = await cmd_card.CardCreate(update, context)
     if res is True:
         await card_list(update, context)
+# ----------------------------------------------------------------------------------------------------------------------
+async def card_click(update: Update, context: CallbackContext) -> None:
+    await cmd_card.CardClick(update, context)
 # ----------------------------------------------------------------------------------------------------------------------
 def main() -> None:
     loop = asyncio.new_event_loop()
@@ -42,6 +45,7 @@ def main() -> None:
     bot.add_handler(CallbackQueryHandler(pattern="register_no", callback=register_no))
     bot.add_handler(CallbackQueryHandler(pattern="card_list", callback=card_list))
     bot.add_handler(CallbackQueryHandler(pattern="card_create", callback=card_create))
+    bot.add_handler(CallbackQueryHandler(pattern="card_click", callback=card_click))
 
     loop.run_until_complete(bot.run_polling(allowed_updates=Update.ALL_TYPES))
 # ----------------------------------------------------------------------------------------------------------------------

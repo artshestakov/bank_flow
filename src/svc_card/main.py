@@ -12,7 +12,7 @@ app = Flask(__name__)
 class DecimalEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Decimal):
-            return float(obj)  # Или str(obj) для точного представления
+            return float(obj)
         return super().default(obj)
 # ----------------------------------------------------------------------------------------------------------------------
 @app.route("/create", methods=["GET"])
@@ -96,6 +96,37 @@ def card_list():
             number_list.append(row[0])
 
         return Response(status=200, response=json.dumps(number_list))
+
+    except Exception as e:
+        return Response(status=400, response=str(e))
+# ----------------------------------------------------------------------------------------------------------------------
+@app.route("/card", methods=["GET"])
+def card():
+
+    data = net.ParseBody(request)
+    if data is None:
+        return Response(status=415, response="Не удалось разобрать тело запроса.")
+
+    number = data.get("number")
+    if number is None:
+        return Response(status=400, response="Поле 'number' пустое!")
+
+    conn = db.make_connect()
+    if conn is None:
+        return Response(status=400, response="Не удалось подключиться к БД.")
+
+    cur = conn.cursor()
+
+    try:
+        cur.execute(f"SELECT balance, TO_CHAR(creation_date, 'DD.MM.YYYY HH24:MI:SS') FROM card WHERE number = {number}")
+        card_object = cur.fetchone()
+        conn.commit()
+
+        if card_object is None:
+            return Response(status=404, response="Карта не найдена!")
+
+        s = json.dumps(card_object, cls=DecimalEncoder)
+        return Response(status=200, response=s)
 
     except Exception as e:
         return Response(status=400, response=str(e))

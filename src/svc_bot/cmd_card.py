@@ -4,7 +4,7 @@ import telegram.constants
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
 # ----------------------------------------------------------------------------------------------------------------------
-from src.utils import net, constants
+from src.utils import net, constants, helper
 # ----------------------------------------------------------------------------------------------------------------------
 async def CardCreate(upd: Update, context: CallbackContext) -> bool:
 
@@ -21,7 +21,7 @@ async def CardCreate(upd: Update, context: CallbackContext) -> bool:
 
     return status_code == 200
 # ----------------------------------------------------------------------------------------------------------------------
-async def CardList(upd: Update, context: CallbackContext, parent_message_id: int):
+async def CardList(upd: Update, context: CallbackContext):
 
     user = upd.callback_query.from_user
 
@@ -32,6 +32,7 @@ async def CardList(upd: Update, context: CallbackContext, parent_message_id: int
     if status_code != 200:
         await context.bot.send_message(chat_id=user.id,
                                        text=f"Что-то пошло не так: {q.m_Response}")
+        return
 
     json_array = json.loads(q.m_Response)
     text = "*Мои карты:*\n\n"
@@ -45,7 +46,7 @@ async def CardList(upd: Update, context: CallbackContext, parent_message_id: int
         for number in json_array:
 
             tmp_list = []
-            btn_card = InlineKeyboardButton(text=f"💳 {number}", callback_data="card_click")
+            btn_card = InlineKeyboardButton(text=f"💳 {number}", callback_data=f"card_click_{number}")
             tmp_list.append(btn_card)
 
             keyboard.append(tmp_list)
@@ -55,6 +56,52 @@ async def CardList(upd: Update, context: CallbackContext, parent_message_id: int
 
     await context.bot.editMessageText(message_id=upd.callback_query.message.message_id,
                                       chat_id=user.id,
+                                      parse_mode=telegram.constants.ParseMode.MARKDOWN,
+                                      text=text,
+                                      reply_markup=InlineKeyboardMarkup(keyboard))
+# ----------------------------------------------------------------------------------------------------------------------
+async def CardClick(upd: Update, context: CallbackContext):
+
+    # Вытаскиваем номер карты
+    card_number = upd.callback_query.data
+    card_number = helper.extract_digits_from_str(card_number)
+
+    q = net.NetQuery()
+    q.Bind("number", card_number)
+    status_code = q.execute_get(constants.TCP_PORT_CARD, "card")
+
+    if status_code != 200:
+        await context.bot.send_message(chat_id=upd.callback_query.from_user.id,
+                                       text=f"Что-то пошло не так: {q.m_Response}")
+        return
+
+    json_object = json.loads(q.m_Response)
+
+    text = "💳 *Карта*\n"
+    text += f"`{str(card_number)}`\n\n"
+
+    text += f"📅 *Дата заведения карты*\n"
+    text += f"{json_object[1]}\n\n"
+
+    balance = json_object[0]
+
+    if int(balance) == 0:
+        balance = str("0")
+
+    text += f"💸 Баланс: {balance}"
+
+
+    keyboard = [
+        [
+            InlineKeyboardButton("❌ Удалить", callback_data="card_create")
+        ],
+        [
+            InlineKeyboardButton("↩ К списку карт", callback_data="card_list")
+        ]
+    ]
+
+    await context.bot.editMessageText(message_id=upd.callback_query.message.message_id,
+                                      chat_id=upd.callback_query.from_user.id,
                                       parse_mode=telegram.constants.ParseMode.MARKDOWN,
                                       text=text,
                                       reply_markup=InlineKeyboardMarkup(keyboard))
