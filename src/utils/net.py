@@ -14,7 +14,8 @@ def ParseBody(request: requests.Request) -> dict:
 # ----------------------------------------------------------------------------------------------------------------------
 class MethodType(Enum):
     GET = 1,
-    POST = 2
+    POST = 2,
+    DELETE = 3
 # ----------------------------------------------------------------------------------------------------------------------
 class NetQuery:
     def __init__(self):
@@ -30,19 +31,25 @@ class NetQuery:
     def execute_post(self, port: int, method: str) -> int:
         return self.execute(MethodType.POST, port, method)
 
+    def execute_delete(self, port: int, method: str) -> int:
+        return self.execute(MethodType.DELETE, port, method)
+
     def execute(self, method_type: MethodType, port: int, method_name: str) -> int:
 
         url = f"http://127.0.0.1:{port}/{method_name}"
         json_body = json.dumps(self.m_Params)
+        headers = {"Content-Type": "application/json"}
         response = None
 
         try:
 
             match method_type:
                 case MethodType.GET:
-                    response = requests.get(url, data=json_body, headers={"Content-Type":"application/json"})
+                    response = requests.get(url, data=json_body, headers=headers)
                 case MethodType.POST:
-                    response = requests.post(url, data=json_body, headers={"Content-Type":"application/json"})
+                    response = requests.post(url, data=json_body, headers=headers)
+                case MethodType.DELETE:
+                    response = requests.delete(url, data=json_body, headers=headers)
 
             self.m_Response = response.text
             return response.status_code
