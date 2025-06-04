@@ -1,7 +1,7 @@
 import json
 from flask import Flask, request, Response
 # ----------------------------------------------------------------------------------------------------------------------
-from src.utils import constants, net, db
+from src.utils import constants, net, db, helper
 # ----------------------------------------------------------------------------------------------------------------------
 app = Flask(__name__)
 # ----------------------------------------------------------------------------------------------------------------------
@@ -62,13 +62,20 @@ def card_list():
 
     cur = conn.cursor()
 
+    # Идентификатор получателя уведомления о переводе (владелец карты-получателя)
+    notify_customer_id = 0
+    balance_new = 0
+
     # Выполним перевод средств с карты-отправителя на карту-получателя
     try:
         # Списываем средства с карты-отправителя
         cur.execute(f"UPDATE card SET balance = balance - {sum} WHERE number = {card_from}")
 
         # Зачисляем средства на карту-получателя
-        cur.execute(f"UPDATE card SET balance = balance + {sum} WHERE number = {card_to}")
+        cur.execute(f"UPDATE card SET balance = balance + {sum} WHERE number = {card_to} RETURNING customer_id, balance")
+        r = cur.fetchone()
+        notify_customer_id = r[0]
+        balance_new = r[1]
 
         # Фиксируем транзакцию в БД
         cur.execute(f"INSERT INTO transaction(card_from, card_to, sum) VALUES({card_from}, {card_to}, {sum})")
@@ -79,6 +86,15 @@ def card_list():
     except Exception as e:
         conn.rollback()
         return Response(status=400, response=f"Не удалось выполнить транзакцию: {str(e)}")
+
+    if notify_customer_id != 0:
+        q.Bind("customer_id", notify_customer_id)
+        q.Bind("message",
+               f"Зачисление средств\n\n"
+               f"Карта: *{helper.short_card_number(card_to)}\n"
+               f"Сумма: {sum}\n"
+               f"Баланс: {balance_new}")
+        q.execute_post(constants.TCP_PORT_NOTIFY, "notify")
 
     return Response(status=200)
 # ----------------------------------------------------------------------------------------------------------------------
