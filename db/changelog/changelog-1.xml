@@ -134,4 +134,12 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="20" author="Shestakov">
+        <sql>ALTER TABLE transaction ADD CONSTRAINT transaction_card_from_fk FOREIGN KEY (card_from) REFERENCES card(number) ON DELETE RESTRICT ON UPDATE NO ACTION NOT DEFERRABLE;</sql>
+    </changeSet>
+
+    <changeSet id="21" author="Shestakov">
+        <sql>ALTER TABLE transaction ADD CONSTRAINT transaction_card_to_fk FOREIGN KEY (card_to) REFERENCES card(number) ON DELETE RESTRICT ON UPDATE NO ACTION NOT DEFERRABLE;</sql>
+    </changeSet>
+
 </databaseChangeLog>

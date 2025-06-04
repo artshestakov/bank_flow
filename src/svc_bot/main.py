@@ -1,4 +1,6 @@
 import asyncio
+import json
+import requests
 # ----------------------------------------------------------------------------------------------------------------------
 from telegram import Update, BotCommand
 from telegram.ext import Application, CommandHandler, ContextTypes, CallbackQueryHandler, CallbackContext
@@ -7,6 +9,8 @@ from src.svc_bot import cmd_start
 from src.svc_bot import cmd_register
 from src.svc_bot import cmd_card
 from src.svc_bot import cmd_transaction
+# ----------------------------------------------------------------------------------------------------------------------
+from src.utils import constants
 # ----------------------------------------------------------------------------------------------------------------------
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await cmd_start.Start(update.message.from_user, context)
@@ -45,7 +49,7 @@ def main() -> None:
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
-    app = Application.builder().token("8116206559:AAEpY3NXGE1KzJTr9VXN0DhY-f66Yz1JEWk").build()
+    app = Application.builder().token(constants.BOT_TOKEN).build()
 
     app.add_handler(CommandHandler("start", start_command))
     app.add_handler(CommandHandler("transaction", transaction_command))
@@ -57,6 +61,12 @@ def main() -> None:
     app.add_handler(CallbackQueryHandler(pattern="card_create", callback=card_create))
     app.add_handler(CallbackQueryHandler(pattern="card_click", callback=card_click))
     app.add_handler(CallbackQueryHandler(pattern="card_delete", callback=card_delete))
+
+    # Установим команды вот таким кривым способом, ибо по-другому я хз как
+    send_text = ('https://api.telegram.org/bot' +
+        constants.BOT_TOKEN + '/setMyCommands?commands=' +
+        str(json.dumps(constants.BOT_COMMANDS)))
+    response = requests.get(send_text)
 
     loop.run_until_complete(app.run_polling(allowed_updates=Update.ALL_TYPES))
 # ----------------------------------------------------------------------------------------------------------------------
