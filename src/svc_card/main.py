@@ -160,6 +160,45 @@ def delete():
 
     return Response(status=200)
 # ----------------------------------------------------------------------------------------------------------------------
+@app.route("/deposit", methods=["PUT"])
+def deposit():
+
+    data = net.ParseBody(request)
+    if data is None:
+        return Response(status=415, response="Не удалось разобрать тело запроса.")
+
+    number = data.get("number")
+    if number is None:
+        return Response(status=400, response="Поле 'number' пустое!")
+
+    sum = data.get("sum")
+    if sum is None:
+        return Response(status=400, response="Поле 'sum' пустое!")
+
+    conn = db.make_connect()
+    if conn is None:
+        return Response(status=400, response="Не удалось подключиться к БД.")
+
+    cur = conn.cursor()
+    balance_new = 0
+
+    try:
+        #number = 1
+        cur.execute(f"UPDATE card SET balance = balance + {sum} WHERE number = {number} RETURNING balance")
+
+        # Если ни одна запись не была обновлена - значит такой карты просто нет
+        if cur.rowcount == 0:
+            return Response(status=400, response=f"Карта {number} не найдена!")
+
+        # Забираем новый баланс
+        balance_new = cur.fetchone()[0]
+
+        conn.commit()
+    except Exception as e:
+        return Response(status=400, response=str(e))
+
+    return Response(status=200, response=f"Зачисление выполнено успешно\n\nБаланс: {balance_new}")
+# ----------------------------------------------------------------------------------------------------------------------
 def main():
     app.run(host='0.0.0.0', port=constants.TCP_PORT_CARD)
 # ----------------------------------------------------------------------------------------------------------------------

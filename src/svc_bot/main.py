@@ -9,6 +9,7 @@ from src.svc_bot import cmd_start
 from src.svc_bot import cmd_register
 from src.svc_bot import cmd_card
 from src.svc_bot import cmd_transaction
+from src.svc_bot import cmd_deposit
 # ----------------------------------------------------------------------------------------------------------------------
 from src.utils import constants
 # ----------------------------------------------------------------------------------------------------------------------
@@ -17,6 +18,9 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 # ----------------------------------------------------------------------------------------------------------------------
 async def transaction_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await cmd_transaction.Transaction(update.message, context)
+# ----------------------------------------------------------------------------------------------------------------------
+async def deposit_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await cmd_deposit.Deposit(update.message, context)
 # ----------------------------------------------------------------------------------------------------------------------
 async def main_menu(update: Update, context: CallbackContext) -> None:
     await cmd_start.Start(update.callback_query.from_user, context, update.callback_query.message.message_id)
@@ -51,8 +55,9 @@ def main() -> None:
 
     app = Application.builder().token(constants.BOT_TOKEN).build()
 
-    app.add_handler(CommandHandler("start", start_command))
+    app.add_handler(CommandHandler("main_menu", start_command))
     app.add_handler(CommandHandler("transaction", transaction_command))
+    app.add_handler(CommandHandler("deposit", deposit_command))
 
     app.add_handler(CallbackQueryHandler(pattern="main_menu", callback=main_menu))
     app.add_handler(CallbackQueryHandler(pattern="register_yes", callback=register_yes))
