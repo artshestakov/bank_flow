@@ -52,6 +52,10 @@ def card_list():
     if status_code != 200:
         return Response(status=400, response=f"Карта {card_to} не найдена!")
 
+    # Проверим, что карта-отправитель отличается от карты-получателя
+    if card_from == card_to:
+        return Response(status=400, response="Карта-отправитель и карта-получатель должны различаться!")
+
     conn = db.make_connect()
     if conn is None:
         return Response(status=400, response="Не удалось подключиться к БД.")
