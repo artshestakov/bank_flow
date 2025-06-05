@@ -4,6 +4,7 @@ from svc_card.main import main as card
 from svc_transaction.main import main as transaction
 from svc_notify.main import main as notify
 from svc_profile.main import main as profile
+from svc_audit.main import main as audit
 # ----------------------------------------------------------------------------------------------------------------------
 import threading
 # ----------------------------------------------------------------------------------------------------------------------
@@ -15,6 +16,7 @@ if __name__ == "__main__":
     t_transaction = threading.Thread(target=transaction)
     t_notify = threading.Thread(target=notify)
     t_profile = threading.Thread(target=profile)
+    t_audit = threading.Thread(target=audit)
 
     t_bot.start()
     t_register.start()
@@ -22,6 +24,7 @@ if __name__ == "__main__":
     t_transaction.start()
     t_notify.start()
     t_profile.start()
+    t_audit.start()
 
     t_bot.join()
     t_register.join()
@@ -29,4 +32,5 @@ if __name__ == "__main__":
     t_transaction.join()
     t_notify.join()
     t_profile.join()
+    t_audit.join()
 # ----------------------------------------------------------------------------------------------------------------------

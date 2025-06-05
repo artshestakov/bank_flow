@@ -12,6 +12,7 @@ TCP_PORT_CARD = 8002
 TCP_PORT_TRANSACTION = 8003
 TCP_PORT_NOTIFY = 8004
 TCP_PORT_PROFILE = 8005
+TCP_PORT_AUDIT = 8006
 # ----------------------------------------------------------------------------------------------------------------------
 # Прочее
 BOT_TOKEN = "8116206559:AAEpY3NXGE1KzJTr9VXN0DhY-f66Yz1JEWk"

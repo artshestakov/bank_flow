@@ -1,16 +1,9 @@
 import json
 import requests
+import os
 from enum import Enum
 # ----------------------------------------------------------------------------------------------------------------------
 from src.utils import constants
-# ----------------------------------------------------------------------------------------------------------------------
-def ParseBody(request: requests.Request) -> dict:
-    try:
-        return request.get_json()
-    except Exception as e:
-        print(f"Failed to convert request body to json: {str(e)}")
-
-    return None
 # ----------------------------------------------------------------------------------------------------------------------
 class MethodType(Enum):
     GET = 1,
@@ -66,4 +59,22 @@ class NetQuery:
         self.m_Params.clear()
 
         return None
+# ----------------------------------------------------------------------------------------------------------------------
+def ParseBody(request: requests.Request) -> dict:
+    try:
+        return request.get_json()
+    except Exception as e:
+        print(f"Failed to convert request body to json: {str(e)}")
+
+    return None
+# ----------------------------------------------------------------------------------------------------------------------
+def Audit(script_path: str, msg: str) -> None:
+
+    script_dir = os.path.dirname(os.path.abspath(script_path))
+    script_dir = os.path.basename(script_dir)
+
+    q = NetQuery()
+    q.Bind("service_source", script_dir)
+    q.Bind("message", msg)
+    q.execute_post(constants.TCP_PORT_AUDIT, "create")
 # ----------------------------------------------------------------------------------------------------------------------
