@@ -1,6 +1,7 @@
 import json
 import random
 import psycopg2
+import sys
 from decimal import Decimal
 from flask import Flask, request, Response
 # ----------------------------------------------------------------------------------------------------------------------
@@ -10,6 +11,7 @@ app = Flask(__name__)
 # ----------------------------------------------------------------------------------------------------------------------
 @app.route("/create", methods=["GET"])
 def create():
+    net.Audit(__file__, sys._getframe().f_code.co_name)
 
     data = net.ParseBody(request)
     if data is None:
@@ -62,6 +64,7 @@ def create():
 # ----------------------------------------------------------------------------------------------------------------------
 @app.route("/card_list", methods=["GET"])
 def card_list():
+    net.Audit(__file__, sys._getframe().f_code.co_name)
 
     data = net.ParseBody(request)
     if data is None:
@@ -95,6 +98,7 @@ def card_list():
 # ----------------------------------------------------------------------------------------------------------------------
 @app.route("/card", methods=["GET"])
 def card():
+    net.Audit(__file__, sys._getframe().f_code.co_name)
 
     data = net.ParseBody(request)
     if data is None:
@@ -131,6 +135,7 @@ def card():
 # ----------------------------------------------------------------------------------------------------------------------
 @app.route("/delete", methods=["DELETE"])
 def delete():
+    net.Audit(__file__, sys._getframe().f_code.co_name)
 
     data = net.ParseBody(request)
     if data is None:
@@ -156,6 +161,7 @@ def delete():
 # ----------------------------------------------------------------------------------------------------------------------
 @app.route("/deposit", methods=["PUT"])
 def deposit():
+    net.Audit(__file__, sys._getframe().f_code.co_name)
 
     data = net.ParseBody(request)
     if data is None:
