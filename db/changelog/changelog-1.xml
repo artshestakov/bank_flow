@@ -142,4 +142,26 @@
         <sql>ALTER TABLE transaction ADD CONSTRAINT transaction_card_to_fk FOREIGN KEY (card_to) REFERENCES card(number) ON DELETE RESTRICT ON UPDATE NO ACTION NOT DEFERRABLE;</sql>
     </changeSet>
 
+    <changeSet id="22" author="Shestakov">
+        <sql>COMMENT ON TABLE transaction IS 'Транзакции';</sql>
+    </changeSet>
+
+    <changeSet id="23" author="Shestakov">
+        <createTable tableName="audit" remarks="Аудит">
+
+            <column name="date_time" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP" remarks="Дата и время">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="service_source" type="VARCHAR" remarks="Сервис-источник">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="message" type="TEXT" remarks="Сообщение">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
 </databaseChangeLog>
