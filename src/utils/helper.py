@@ -11,7 +11,7 @@ def extract_digits_from_str(s: str):
     return res
 # ----------------------------------------------------------------------------------------------------------------------
 def short_card_number(number: int):
-    return number % (10 ** 4)
+    return str(number)[-4:]
 # ----------------------------------------------------------------------------------------------------------------------
 class DecimalEncoder(json.JSONEncoder):
     def default(self, obj):
