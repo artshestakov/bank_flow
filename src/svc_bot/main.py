@@ -10,6 +10,7 @@ from src.svc_bot import cmd_register
 from src.svc_bot import cmd_card
 from src.svc_bot import cmd_transaction
 from src.svc_bot import cmd_deposit
+from src.svc_bot import cmd_profile
 # ----------------------------------------------------------------------------------------------------------------------
 from src.utils import constants
 # ----------------------------------------------------------------------------------------------------------------------
@@ -24,6 +25,9 @@ async def deposit_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 # ----------------------------------------------------------------------------------------------------------------------
 async def main_menu(update: Update, context: CallbackContext) -> None:
     await cmd_start.Start(update.callback_query.from_user, context, update.callback_query.message.message_id)
+# ----------------------------------------------------------------------------------------------------------------------
+async def profile(update: Update, context: CallbackContext) -> None:
+    await cmd_profile.Profile(update.callback_query.message, context)
 # ----------------------------------------------------------------------------------------------------------------------
 async def register_yes(update: Update, context: CallbackContext) -> None:
     await cmd_register.Register(context, update)
@@ -60,6 +64,7 @@ def main() -> None:
     app.add_handler(CommandHandler("deposit", deposit_command))
 
     app.add_handler(CallbackQueryHandler(pattern="main_menu", callback=main_menu))
+    app.add_handler(CallbackQueryHandler(pattern="profile", callback=profile))
     app.add_handler(CallbackQueryHandler(pattern="register_yes", callback=register_yes))
     app.add_handler(CallbackQueryHandler(pattern="register_no", callback=register_no))
     app.add_handler(CallbackQueryHandler(pattern="card_list", callback=card_list))
