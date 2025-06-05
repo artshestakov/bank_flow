@@ -19,7 +19,7 @@ async def Register(context: CallbackContext, upd: Update):
     # Если создание пользователя прошло успешно - предлагаем перейти в главное меню
     if status_code == 200:
 
-        keyboard = [[InlineKeyboardButton("В главное меню", callback_data="main_menu")]]
+        keyboard = [[InlineKeyboardButton("↩ В главное меню", callback_data="main_menu")]]
 
         await context.bot.editMessageText(chat_id=user.id,
                                           message_id=upd.callback_query.message.message_id,

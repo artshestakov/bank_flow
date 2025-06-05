@@ -4,15 +4,9 @@ import psycopg2
 from decimal import Decimal
 from flask import Flask, request, Response
 # ----------------------------------------------------------------------------------------------------------------------
-from src.utils import constants, db, net
+from src.utils import constants, db, net, helper
 # ----------------------------------------------------------------------------------------------------------------------
 app = Flask(__name__)
-# ----------------------------------------------------------------------------------------------------------------------
-class DecimalEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, Decimal):
-            return float(obj)
-        return super().default(obj)
 # ----------------------------------------------------------------------------------------------------------------------
 @app.route("/create", methods=["GET"])
 def create():
@@ -129,7 +123,7 @@ def card():
             "creation_date": row[1]
         }
 
-        s = json.dumps(json_object, cls=DecimalEncoder)
+        s = json.dumps(json_object, cls=helper.DecimalEncoder)
         return Response(status=200, response=s)
 
     except Exception as e:

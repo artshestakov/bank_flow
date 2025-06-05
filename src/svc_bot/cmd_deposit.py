@@ -39,6 +39,6 @@ async def Deposit(msg: Message, context: CallbackContext) -> None:
         await context.bot.send_message(chat_id=msg.from_user.id, text=q.m_Response)
         return
 
-    # Поплнение выполнено успешно
+    # Пополнение выполнено успешно
     await context.bot.send_message(chat_id=msg.from_user.id, text=q.m_Response)
 # ----------------------------------------------------------------------------------------------------------------------
