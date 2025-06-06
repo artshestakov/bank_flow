@@ -7,6 +7,7 @@ app = Flask(__name__)
 # ----------------------------------------------------------------------------------------------------------------------
 @app.route("/create", methods=["POST"])
 def card_list():
+    net.Audit(__file__, sys._getframe().f_code.co_name)
 
     data = net.ParseBody(request)
     if data is None:
